@@ -371,7 +371,7 @@
       }
        // save the changed attribute keys into the options,
        // which will later on be passed to the URL function
-       options.changedAttrs = _.keys(attrs);
+       if (_.keys(attrs).length == 1) options.changedAttr = _.keys(attrs).shift();
        
       // After a successful server-side save, the client is (optionally)
       // updated with the server-side state.
@@ -1336,7 +1336,7 @@
 
     // Ensure that we have a URL.
     if (!options.url) {
-      params.url = getValue(model, 'url', options.changedAttrs || {}) || urlError();
+      params.url = getValue(model, 'url', options.changedAttr) || urlError();
     }
 
     // Ensure that we have the appropriate request data.
@@ -1434,9 +1434,9 @@
 
   // Helper function to get a value from a Backbone object as a property
   // or as a function.
-  var getValue = function(object, prop, changedAttrs) {
+  var getValue = function(object, prop, changedAttr) {
     if (!(object && object[prop])) return null;
-    return _.isFunction(object[prop]) ? object[prop]({changed: changedAttrs}) : object[prop];
+    return _.isFunction(object[prop]) ? object[prop]({changed: changedAttr}) : object[prop];
   };
 
   // Throw an error when a URL is needed, and none is supplied.
